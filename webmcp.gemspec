@@ -16,6 +16,9 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*", "app/assets/**/*", "runtime/webmcp-runtime.js", "conformance/**/*",
                    "README.md", "CHANGELOG.md", "LICENSE.txt", "Rakefile"].select { |path| File.file?(path) }
   spec.require_paths = ["lib"]
+  spec.metadata["changelog_uri"] = "https://github.com/seunghan91/webmcp/blob/main/CHANGELOG.md"
+  spec.metadata["bug_tracker_uri"] = "https://github.com/seunghan91/webmcp/issues"
+  spec.metadata["documentation_uri"] = "https://github.com/seunghan91/webmcp#readme"
   spec.metadata["source_code_uri"] = "https://github.com/seunghan91/webmcp"
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.add_development_dependency "minitest", "~> 5.0"

@@ -1,6 +1,43 @@
 # webmcp
 
-0.1.0 · Spec baseline: **Draft CG Report 2026-10-02** · Browser test target: **Chrome 154.0.8037.98**. All 9 real-browser checks pass on Rails 8.1 and 8.0, plus a production asset/CSP smoke test (details below).
+[![Gem Version](https://img.shields.io/gem/v/webmcp)](https://rubygems.org/gems/webmcp) [![CI](https://github.com/seunghan91/webmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/seunghan91/webmcp/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+
+Server-side WebMCP toolkit for Ruby and Rails — the reference implementation of the family.
+
+[WebMCP](https://github.com/webmachinelearning/webmcp) is a W3C Community Group
+proposal that lets a web page register tools an in-browser AI agent can call
+through `document.modelContext`. This gem is the server side of that: you define
+tools where your app already knows its routes, sessions and permissions, and a
+small browser runtime registers them on the pages you choose. When an agent calls
+a tool, the runtime calls your existing same-origin endpoint with the user's
+session and CSRF token, so authentication and authorization stay in your app.
+
+- **Tool definitions** — `WebMCP::Tool.define`, validated against the spec's naming, annotation and schema rules at boot.
+- **Projection from MCP SDK tools** — `WebMCP::Tool.from_mcp` reuses a tool's identity from the official [`mcp`](https://rubygems.org/gems/mcp) gem and makes every browser-side difference explicit, with a pinned source fingerprint that fails tests when the MCP tool drifts.
+- **Rails helpers** — `webmcp_manifest_tag` (per-page opt-in), `webmcp_runtime_tag` (CSP nonce aware, autostart), `form_with ..., webmcp: {...}` for declarative forms (keeps custom FormBuilders).
+- **Origin Trial** — `WebMCP::OriginTrial` Rack middleware and `webmcp_origin_trial_meta_tag`.
+- **Shared browser runtime** — zero dependencies; same-origin only, `redirect: 'error'`, CSRF read per call, declared parameters only, read/write outcome envelopes, no retries.
+
+```ruby
+# Gemfile
+gem "webmcp", "~> 0.1"
+```
+
+**Status:** 0.x, tracking the WebMCP Draft CG Report of 2026-10-02. WebMCP runs
+behind a Chrome origin trial (Chrome 149–156, extension requested to 162) or the
+`chrome://flags/#enable-webmcp-testing` flag. The shared runtime is tested in real
+Chrome 154 by the [Ruby reference suite](https://github.com/seunghan91/webmcp/blob/main/test/integration/RESULTS.md)
+(CSRF-protected writes, blocked redirects, HTTP errors, Turbo navigation, strict CSP).
+
+| Language | Package | Registry |
+|---|---|---|
+| Ruby / Rails (reference) | [`webmcp`](https://github.com/seunghan91/webmcp) | [RubyGems](https://rubygems.org/gems/webmcp) |
+| Go (`net/http`) | [`webmcp-go`](https://github.com/seunghan91/webmcp-go) | [pkg.go.dev](https://pkg.go.dev/github.com/seunghan91/webmcp-go) |
+| Python / Django | [`webmcp-django`](https://github.com/seunghan91/webmcp-django) | [PyPI](https://pypi.org/project/webmcp-django/) |
+| Rust | [`webmcp`](https://github.com/seunghan91/webmcp-rust) | [crates.io](https://crates.io/crates/webmcp) |
+
+All four emit the same manifest v1 (checked against shared conformance fixtures,
+fingerprints included) and ship the byte-identical browser runtime.
 
 ## Intent: share identity, project the rest explicitly
 
