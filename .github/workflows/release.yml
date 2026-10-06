@@ -1,0 +1,41 @@
+# Publishes the gem to RubyGems through Trusted Publishing (OIDC), so no API
+# key or OTP lives in the repository. Runs on version tags, or manually.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Unit tests
+        run: |
+          bundle exec rake test
+          node --test runtime/test/runtime.test.mjs
+      - name: Runtime copy matches the pinned hash
+        run: sha256sum -c conformance/RUNTIME.sha256
+      - uses: rubygems/configure-rubygems-credentials@v1.0.0
+      - name: Build and push unless this version is already published
+        run: |
+          version=$(ruby -r ./lib/webmcp/version -e 'print WebMCP::VERSION')
+          if gem list --remote --exact webmcp --all | grep -q "(.*\b${version}\b"; then
+            echo "webmcp ${version} is already on RubyGems; nothing to do."
+            exit 0
+          fi
+          gem build webmcp.gemspec
+          gem push "webmcp-${version}.gem"
