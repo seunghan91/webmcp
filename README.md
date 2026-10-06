@@ -1,6 +1,6 @@
 # webmcp
 
-0.1.0 · Spec baseline: **Draft CG Report 2026-10-02** · Browser test target: **Chrome 154.0.8037.98**. Production asset/CSP smoke passes; the object-input browser execution gate remains blocked by this build (details below).
+0.1.0 · Spec baseline: **Draft CG Report 2026-10-02** · Browser test target: **Chrome 154.0.8037.98**. All 9 real-browser checks pass on Rails 8.1 and 8.0, plus a production asset/CSP smoke test (details below).
 
 ## Intent: share identity, project the rest explicitly
 
@@ -317,15 +317,19 @@ protection and strict nonce-based CSP. It fails explicitly if WebMCP is missing.
 precompiles production assets, verifies the served runtime bytes, checks native
 tool registration and CSP, and cleans up the temporary app.
 
-On Chrome **154.0.8037.98** with `--enable-features=WebMCPTesting`, registration,
-Turbo replacement, and strict CSP pass. The packaged production app also passes.
-However, this build rejects `executeTool(tool, inputObject)` with
-`UnknownError: Failed to parse input arguments`; integration checks 2–7 remain
-failing. The test retains object inputs and does not silently skip or substitute
-the legacy interface. A separate diagnostic within the serialization check uses
-legacy JSON-string input (`"{}"`) and records an envelope string
-`{"ok":true,"status":200,"data":"hello"}` and a plain `hi` string (no extra JSON
-quotes). That diagnostic does not satisfy the object-input release gate.
+On Chrome **154.0.8037.98** with `--enable-features=WebMCPTesting`, all 9 checks
+pass on Rails 8.1 and 8.0: registration and annotations, bracket-array round-trip
+through Rack, a CSRF-protected write, a missing CSRF token blocking the request,
+read/write redirect outcomes, HTTP 500, Turbo tool-set replacement (including a
+first page without a manifest and same-name re-registration), and zero CSP
+violations. The packaged production app also passes.
 
-See [the Lane C verification report](test/integration/RESULTS.md) for commands,
-outputs and the exact scope of the remaining browser compatibility failure.
+Two Chrome 154 behaviours differ from the spec. It accepts only the legacy
+JSON-string `executeTool` input (object input ships in Chrome 155), so the test
+helper, which plays the agent, falls back to it; the runtime's `execute` receives
+an object either way, and `WEBMCP_STRICT_OBJECT_INPUT=1` runs the object-only gate.
+A tool that returns a plain string comes back as `hi`, without the JSON quotes the
+spec's serialization step implies; the runtime always returns an envelope object.
+
+See [the Lane C verification report](test/integration/RESULTS.md) for commands
+and outputs.
