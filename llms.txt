@@ -1,0 +1,33 @@
+# webmcp (Ruby / Rails)
+
+> Server-side WebMCP toolkit for Ruby and Rails (reference implementation): validated tool definitions, projection from official MCP SDK tools (`WebMCP::Tool.from_mcp`), per-page script-safe manifests, a shared zero-dependency browser runtime, declarative `form_with` attributes and Origin Trial helpers.
+
+- Spec baseline: WebMCP Draft Community Group Report, 2026-10-02 (https://webmachinelearning.github.io/webmcp/). Browser API: `document.modelContext.registerTool()`, `getTools()`, `executeTool()` (formerly `navigator.modelContext`, deprecated in Chrome 150; the runtime falls back to it).
+- Install: Add `gem "webmcp", "~> 0.1"` to the Gemfile, then `bundle install`.
+- Requirements: Ruby >= 3.1, no runtime gem dependencies. Rails >= 7.1 and the `mcp` gem >= 1.1 are optional.
+- Registry: [RubyGems](https://rubygems.org/gems/webmcp). License: MIT. Status: 0.x.
+- Browser support: Chrome 149+ via origin trial (149–156, extension requested to 162) or `chrome://flags/#enable-webmcp-testing`. Verified in Chrome 154.
+- Not an MCP server library: WebMCP tools run in the user's browser tab. For desktop/CLI agents use an MCP SDK.
+- Public API: `WebMCP::Tool.define`, `WebMCP::Tool.from_mcp`, `WebMCP.register`, `WebMCP.freeze!`, `WebMCP::Manifest.build` / `.to_script_tag`, `WebMCP::OriginTrial` (Rack), `WebMCP::Testing.assert_projection_fresh` / `.current_source_fingerprint`; Rails view helpers `webmcp_manifest_tag`, `webmcp_runtime_tag`, `webmcp_origin_trial_meta_tag`; `form_with ..., webmcp: { tool:, description:, autosubmit: }` and field option `webmcp: { param_description: }`.
+
+## Docs
+
+- [README](https://github.com/seunghan91/webmcp/blob/main/README.md): what it does, install, quick start, intent, security model, troubleshooting
+- [AGENTS.md](https://github.com/seunghan91/webmcp/blob/main/AGENTS.md): integration recipe, invariants, verification for coding agents
+- [Security model](https://github.com/seunghan91/webmcp/blob/main/README.md#security-model): same-origin endpoints, no redirects, per-call CSRF, declared parameters only, outcome envelopes, no retries
+- [Troubleshooting](https://github.com/seunghan91/webmcp/blob/main/README.md#troubleshooting): exact error messages and fixes
+- [Conformance fixtures](https://github.com/seunghan91/webmcp/tree/main/conformance): shared manifest v1 fixtures and the pinned runtime hash
+- [CHANGELOG](https://github.com/seunghan91/webmcp/blob/main/CHANGELOG.md)
+
+## Related packages (same manifest v1 and runtime)
+
+- [webmcp (Ruby / Rails, reference)](https://github.com/seunghan91/webmcp): RubyGems `webmcp`
+- [webmcp-go (Go)](https://github.com/seunghan91/webmcp-go): `github.com/seunghan91/webmcp-go`
+- [webmcp-django (Python / Django)](https://github.com/seunghan91/webmcp-django): PyPI `webmcp-django`
+- [webmcp-rust (Rust)](https://github.com/seunghan91/webmcp-rust): crates.io `webmcp`
+
+## Optional
+
+- [WebMCP explainer](https://github.com/webmachinelearning/webmcp): the W3C proposal
+- [Chrome WebMCP docs](https://developer.chrome.com/docs/ai/webmcp): origin trial, imperative and declarative APIs, security guidance
+- [Real-browser test report](https://github.com/seunghan91/webmcp/blob/main/test/integration/RESULTS.md): Chrome 154 results for the shared runtime

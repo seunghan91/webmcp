@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Documentation for people and AI agents: `AGENTS.md`, `llms.txt`, a README troubleshooting table with exact error messages, and changelog/issue/documentation links in the gemspec.
+
 ## 0.1.0
 
 - Autostart opted-in manifests from the external runtime under strict CSP, expose
