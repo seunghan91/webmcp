@@ -62,7 +62,7 @@ Even `readOnlyHint` must be declared again for the browser endpoint.
 ## Quick start
 
 Ruby >= 3.1; no runtime gem dependencies. Rails >= 7.1 and the `mcp` gem >= 1.1
-are optional. Add `gem "webmcp", "~> 0.1.0"` to your Gemfile.
+are optional. Add `gem "webmcp", "~> 0.1"` to your Gemfile.
 
 ```ruby
 require "webmcp"
