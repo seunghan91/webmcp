@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-10-06
 
 - Documentation for people and AI agents: `AGENTS.md`, `llms.txt`, a README troubleshooting table with exact error messages, and changelog/issue/documentation links in the gemspec.
 
