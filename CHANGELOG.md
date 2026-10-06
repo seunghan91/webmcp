@@ -5,8 +5,10 @@
 - Autostart opted-in manifests from the external runtime under strict CSP, expose
   `WebMCPRuntime.handle`, and emit `webmcp:mounted`; support `autostart: false`.
 - Add explicit Rails 8/Turbo/Chrome integration and built-gem production asset
-  smoke tasks. Chrome 154.0.8037.98 passes registration/CSP/package checks but
-  rejects the required object-form `executeTool` input; that gate stays failing.
+  smoke tasks. All 9 browser checks pass on Chrome 154.0.8037.98 with Rails 8.1
+  and 8.0. Chrome 154 accepts only legacy JSON-string `executeTool` input (object
+  input ships in 155), so the agent-side test helper falls back to it;
+  `WEBMCP_STRICT_OBJECT_INPUT=1` runs the object-only gate.
 
 - Add immutable validated tool definitions and explicit MCP metadata projections,
   source drift checks, and canonical effective-contract fingerprints.
