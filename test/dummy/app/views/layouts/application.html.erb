@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WebMCP integration</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= javascript_importmap_tags %>
+    <%= webmcp_runtime_tag %>
+  </head>
+  <body>
+    <%= webmcp_manifest_tag(*@tools, **(@transport ? { transport: @transport } : {})) if @tools.any? %>
+    <%= yield %>
+  </body>
+</html>

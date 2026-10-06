@@ -1,1 +1,10 @@
 *.gem
+.bundle/
+vendor/bundle/
+Gemfile.lock
+test/integration/node_modules/
+test/integration/artifacts/
+test/dummy/log/
+test/dummy/tmp/
+test/dummy/storage/
+test/dummy/public/assets/
